@@ -9,8 +9,8 @@ test("end to end test for buying tickets", async ({ page }) => {
 
   await page
     .getByText(/^Tickets2086 Newpark Mall Rd, Newark, CA 94560BUY$/)
-    .getByRole("button", { name: "BUY" })
-    .click();
+    .getByRole("button", { name: "BUY" }).first().click();
+    
 
   await page.getByRole("button", { name: "+" }).click();
 
@@ -23,12 +23,7 @@ test("end to end test for buying tickets", async ({ page }) => {
   // wait for the promise to resolve
   await responsePromise;
 
-
-
-
   // /New dialog box for checkout is opened by now, start populating values in input boxes
-  // await page.waitForSelector("//input[contains(@class,'MuiInputBase-input MuiOutlinedInput-input')]");
-  
   (await page.waitForSelector("(//input[contains(@class,'MuiInputBase-input MuiOutlinedInput-input')])[1]")).fill(
     "email@coinspaze.com"
   );
@@ -46,8 +41,8 @@ test("end to end test for buying tickets", async ({ page }) => {
   (await page.waitForSelector("(//label[text()='Zip Code']/following::input)[1]")).fill("98105");
   (await page.waitForSelector("(//label[text()='City']/following::input)[1]")).fill("San Francisco");
   (await page.waitForSelector("(//label[text()='Region']/following::input)[1]")).fill("California");
-  await page.getByRole("button", { name: "​" }).nth(2).click();
-  await page.getByRole("option", { name: "(+1) US" }).first().click();
+  // await page.getByRole("button", { name: "​" }).nth(2).first().click();
+  // await page.getByRole("option", { name: "(+1) US" }).click();
 
   // click on place order button to make api call
   // await page.getByRole("button", { name: "PLACE ORDER" }).click();
