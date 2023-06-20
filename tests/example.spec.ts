@@ -7,12 +7,10 @@ test("end to end test for buying tickets", async ({ page }) => {
 
   await expect(page).toHaveURL(/.*radio-zindagi-ganesh-utsav-15f929/);
 
-  await page
-    .getByText(/^Tickets2086 Newpark Mall Rd, Newark, CA 94560BUY$/)
-    .getByRole("button", { name: "BUY" }).first().click();
-    
+  (await page.waitForSelector("(//button[contains(@class,'MuiButtonBase-root MuiButton-root')]//span)[1]")).click();
+  (await page.waitForSelector("(//button[contains(@class,'MuiButtonBase-root MuiButton-root')]/following-sibling::button)[2]")).click();
 
-  await page.getByRole("button", { name: "+" }).click();
+  // await page.waitForSelector("button", { name: "+" }).click();
 
   // Start waiting for api response before making api call
   const responsePromise = page.waitForResponse("https://gateway.coinspaze.dev/v1/payment-intents");
@@ -24,6 +22,8 @@ test("end to end test for buying tickets", async ({ page }) => {
   await responsePromise;
 
   // /New dialog box for checkout is opened by now, start populating values in input boxes
+  
+
   (await page.waitForSelector("(//input[contains(@class,'MuiInputBase-input MuiOutlinedInput-input')])[1]")).fill(
     "email@coinspaze.com"
   );
@@ -41,20 +41,20 @@ test("end to end test for buying tickets", async ({ page }) => {
   (await page.waitForSelector("(//label[text()='Zip Code']/following::input)[1]")).fill("98105");
   (await page.waitForSelector("(//label[text()='City']/following::input)[1]")).fill("San Francisco");
   (await page.waitForSelector("(//label[text()='Region']/following::input)[1]")).fill("California");
-  // await page.getByRole("button", { name: "​" }).nth(2).first().click();
-  // await page.getByRole("option", { name: "(+1) US" }).click();
+  (await page.waitForSelector("(//div[contains(@class,'MuiInputBase-root MuiOutlinedInput-root')]//div)[2]")).click();
+  await page.getByRole("option", { name: "(+1) US" }).first().click();
 
   // click on place order button to make api call
-  // await page.getByRole("button", { name: "PLACE ORDER" }).click();
+  await page.getByRole("button", { name: "PLACE ORDER" }).click();
 
   // wait for the api request to succeed
   await page.waitForTimeout(8000);
 
   // assert that next page contains comfirmation in its URL
-  // await expect(page).toHaveURL(/.*confirmation/);
+  await expect(page).toHaveURL(/.*confirmation/);
 
   // click on close button on the modal
-  // await page.getByRole("button").click();
+  await page.getByRole("button").click();
 
   // close the page
   await page.close();
